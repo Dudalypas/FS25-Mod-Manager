@@ -6,10 +6,10 @@ import java.util.Optional;
 
 public class NeededPowerSpecParser {
     public Optional<NeededPowerSpec> parse(Document document) {
-        if(document.getElementsByTagName("NeededPower").item(0) == null) {
+        if(document.getElementsByTagName("neededPower").item(0) == null) {
             return Optional.empty();
         }
-        int NeededPower = Integer.parseInt(document.getElementsByTagName("NeededPower").item(0).getTextContent());
+        int NeededPower = Integer.parseInt(document.getElementsByTagName("neededPower").item(0).getTextContent());
 
         return Optional.of(new NeededPowerSpec(NeededPower));
     }

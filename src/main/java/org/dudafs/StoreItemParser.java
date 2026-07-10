@@ -12,7 +12,15 @@ import java.util.zip.ZipFile;
 
 public class StoreItemParser {
     public StoreItem parseStoreItem(ZipFile zipFile, String storeItemPath) throws IOException, ParserConfigurationException, SAXException {
-        Document document = XmlHelper.loadXmlFromZip(zipFile, storeItemPath);
+        Document document = null;
+        try {
+            document = XmlHelper.loadXmlFromZip(zipFile, storeItemPath);
+        }
+        catch (SAXException e) {
+            System.err.println("Error parsing: " + zipFile.getName() + ": " + storeItemPath);
+            System.err.println("Reason: " + e.getMessage());
+        }
+
         assert document != null;
         String brand = "NONE";
         if (document.getElementsByTagName("brand").item(0) != null) {

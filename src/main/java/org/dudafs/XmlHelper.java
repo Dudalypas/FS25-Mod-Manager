@@ -38,6 +38,11 @@ public class XmlHelper {
         factory.setIgnoringComments(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         String content = new String(inputStream.readAllBytes());
+        content = content.replaceAll("(?s)<!--.*?-->", "");
+        content = content.replaceAll(
+                "(?<=[\"'])(?=[A-Za-z_:][A-Za-z0-9_.:-]*\\s*=)",
+                " "
+        );
         content = XmlHelper.sanitizeBom(content);
         content = XmlHelper.fixUnescapedAmpersands(content);
 

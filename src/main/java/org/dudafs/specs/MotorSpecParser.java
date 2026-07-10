@@ -12,6 +12,7 @@ public class MotorSpecParser {
         int minPower = 0;
         int maxPower = 0;
         int fuelCapacity = 0;
+        String transmissionName = "Automatic";
         NodeList items = document.getElementsByTagName("motorConfiguration");
 
         if (items.getLength() == 0) {
@@ -31,7 +32,9 @@ public class MotorSpecParser {
         }
 
         Element transmission = (Element) document.getElementsByTagName("transmission").item(0);
-        String transmissionName = transmission.getAttribute("name");
+        if(transmission != null) {
+            transmissionName = transmission.getAttribute("name");
+        }
 
         Element motor = (Element) document.getElementsByTagName("motor").item(0);
         int maxSpeed = (int) Double.parseDouble(motor.getAttribute("maxForwardSpeed")); // 44

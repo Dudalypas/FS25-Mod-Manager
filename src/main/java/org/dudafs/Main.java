@@ -48,7 +48,7 @@ public class Main {
                         } catch (ParserConfigurationException | IOException | SAXException e) {
                             throw new RuntimeException(e);
                         }
-                        System.out.println(result.fileName);
+                        System.out.println("\n" + result.fileName);
                         System.out.println(result.modName);
                         System.out.println(result.authorName);
                         System.out.println(result.modVersion);});
@@ -71,7 +71,7 @@ public class Main {
                                         });
 
                                         item.getSpec(NeededPowerSpec.class).ifPresent( neededPower -> {
-                                            System.out.println("Needed power: " + neededPower + " hp");
+                                            System.out.println("Needed power: " + neededPower.getNeededPower() + " hp");
                                         });
 
                                         item.getSpec(BaleSpec.class).ifPresent( bale -> {

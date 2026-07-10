@@ -17,6 +17,7 @@ import java.util.zip.ZipFile;
 public class ModDescParser {
     public ModInfo parseModDesc(ZipFile zipFile) throws ParserConfigurationException, IOException, SAXException {
         Document document = XmlHelper.loadXmlFromZip(zipFile, "modDesc.xml");
+
         String fileName = new File(zipFile.getName()).getName();
         assert document != null;
         Element title = (Element) document.getElementsByTagName("title").item(0);
