@@ -1,0 +1,134 @@
+package org.dudafs;
+
+import org.dudafs.specs.*;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.*;
+import java.util.zip.ZipFile;
+import org.dudafs.ModScanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("FS25 Equipment Indexer");
+
+        File configFile = new File("config.properties");
+        Properties config = new Properties();
+        try(FileInputStream fis = new FileInputStream(configFile)) {
+            config.load(fis);
+        }
+        catch (FileNotFoundException e) {
+            System.out.println("Config file not found");
+        }
+
+        File modsFolder = ModsFolderManager.getModsFolder(config, configFile);
+
+        boolean running = true;
+
+        while (running) {
+            System.out.println();
+            System.out.println("1. List mod packages: ");
+            System.out.println("2. List store items: ");
+            System.out.println("3. Change mods folder: ");
+            System.out.println("4. Exit");
+            System.out.print("Choose option: ");
+
+            String choice = scanner.nextLine();
+            
+            switch (choice) {
+                case "1":
+                    ModScanner.forEachModZip(modsFolder, zip -> {
+                        ModDescParser parser = new ModDescParser();
+                        ModInfo result = null;
+                        try {
+                            result = parser.parseModDesc(zip);
+                        } catch (ParserConfigurationException | IOException | SAXException e) {
+                            throw new RuntimeException(e);
+                        }
+                        System.out.println(result.fileName);
+                        System.out.println(result.modName);
+                        System.out.println(result.authorName);
+                        System.out.println(result.modVersion);});
+                    break;
+                case "2":
+                    ModDescParser modParser = new ModDescParser();
+                    StoreItemParser storeParser = new StoreItemParser();
+                    ModScanner.forEachModZip(modsFolder, zip -> {
+                        try {
+                            ModInfo modInfo = modParser.parseModDesc(zip);
+                                for (String storeItem : modInfo.storeItemPaths) {
+                                    if (!storeItem.isEmpty()) {
+                                        StoreItem item = storeParser.parseStoreItem(zip, storeItem);
+                                        System.out.println("\n" + item.getDisplayName());
+                                        item.getSpec(MotorSpec.class).ifPresent( motor -> {
+                                            System.out.println("Power " + motor.getPower() + " hp");
+                                            System.out.println("Transmission " + motor.getTransmission());
+                                            System.out.println("Fuel Capacity " + motor.getFuelCapacity());
+                                            System.out.println("Max Speed " + motor.getMaxSpeed() + " km/h");
+                                        });
+
+                                        item.getSpec(NeededPowerSpec.class).ifPresent( neededPower -> {
+                                            System.out.println("Needed power: " + neededPower + " hp");
+                                        });
+
+                                        item.getSpec(BaleSpec.class).ifPresent( bale -> {
+                                            if (Objects.equals(bale.getbaleType(), "Round")) {
+                                                System.out.println(bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
+                                            } else if (Objects.equals(bale.getbaleType(), "Square")) {
+                                                System.out.println(bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
+                                            }
+                                            else {
+                                                System.out.println("Round Bales: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
+                                                System.out.println("Square Bales: " + bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
+                                            }
+                                        });
+
+                                        item.getSpec(WorkingWidthSpec.class).ifPresent(width -> {
+                                            System.out.println("Working Width: " + width.getWorkingWidth() + " meters");
+                                        });
+
+                                        item.getSpec(WorkingSpeedSpec.class).ifPresent(speed -> {
+                                            System.out.println("Working Speed: " + speed.getWorkingSpeed() + " km/h");
+                                        });
+
+                                        item.getSpec(SowingSpec.class).ifPresent(seed -> {
+                                            if(seed.isUseDirectPlanting()) {
+                                                System.out.println("Has direct seed function.");
+                                            }
+                                            else{
+                                                System.out.println("Doesn't have direct seed function.");
+                                            }
+                                            System.out.println(seed.getSeedFruitTypeCategories());
+                                        });
+
+                                        item.getSpec(FillSpec.class).ifPresent(fill -> {
+                                            System.out.print(fill.getFillUnits() + ": ");
+                                            if(fill.getCapacity() > 0){
+                                                System.out.println(fill.getCapacity() + " liters");
+                                            }
+                                        });
+                                    }
+                                }
+                        } catch (ParserConfigurationException | IOException | SAXException e) {
+                            System.out.println("Failed to parse" + zip);
+                        }
+                    });
+                    break;
+                case "3":
+                    modsFolder = ModsFolderManager.changeModsFolder(config, configFile);
+                    break;
+                case "4":
+                    System.out.println("Exiting...");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid option");
+                    break;
+            }
+        }
+        scanner.close();
+    }
+}
