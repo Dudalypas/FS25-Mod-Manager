@@ -10,7 +10,7 @@ public class MotorSpec implements ItemSpec {
     private final int maxSpeed;
     private final int fuelCapacity;
 
-    public MotorSpec(int minPower, int maxPower, String transmission, int maxSpeed, int fuelCapacity) {
+    public MotorSpec(Integer minPower, Integer maxPower, String transmission, int maxSpeed, int fuelCapacity) {
         this.minPower = minPower;
         this.maxPower = maxPower;
         this.transmission = transmission;
@@ -18,8 +18,12 @@ public class MotorSpec implements ItemSpec {
         this.fuelCapacity = fuelCapacity;
     }
 
-    public int getPower() {
+    public Integer getMinPower() {
         return minPower;
+    }
+
+    public Integer getMaxPower() {
+        return maxPower;
     }
 
     public String getTransmission() {

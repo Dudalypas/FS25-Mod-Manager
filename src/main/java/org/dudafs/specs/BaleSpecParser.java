@@ -50,9 +50,8 @@ public class BaleSpecParser {
             maxBaleLength = (int) (Collections.max(sizes.get("Square"))*100);
         }
 
-        assert baleTypes != null;
         baleType = (Element) baleTypes.getElementsByTagName("baleType").item(0);
-        if(baleType.hasAttribute("mixedFillTypes")){
+        if(baleType.hasAttribute("length") && baleType.hasAttribute("diameter")){
             baleTypeName = "Mixed";
         } else if (baleType.getAttribute("isRoundBale").equals("true")) {
             baleTypeName = "Round";

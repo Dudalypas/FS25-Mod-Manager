@@ -60,39 +60,61 @@ public class Main {
                         try {
                             ModInfo modInfo = modParser.parseModDesc(zip);
                                 for (String storeItem : modInfo.storeItemPaths) {
-                                    if (!storeItem.isEmpty()) {
-                                        StoreItem item = storeParser.parseStoreItem(zip, storeItem);
+                                    StoreItem item = storeParser.parseStoreItem(zip, storeItem);
+                                    if (!storeItem.isEmpty() && !item.getCategory().equals("placeable")) {
+
+                                        // Display Name
+
                                         System.out.println("\n" + item.getDisplayName());
+                                        System.out.println(item.getCategory());
+
+                                        // Motor Spec
+
                                         item.getSpec(MotorSpec.class).ifPresent( motor -> {
-                                            System.out.println("Power " + motor.getPower() + " hp");
-                                            System.out.println("Transmission " + motor.getTransmission());
-                                            System.out.println("Fuel Capacity " + motor.getFuelCapacity());
-                                            System.out.println("Max Speed " + motor.getMaxSpeed() + " km/h");
+                                            if(Objects.equals(motor.getMinPower(), motor.getMaxPower())){
+                                                System.out.println("Power: " + motor.getMinPower() + " hp");
+                                            }
+                                            else{
+                                                System.out.println("Power: " + motor.getMinPower() + "-" + motor.getMaxPower() + " hp");
+                                            }
+                                            System.out.println("Transmission: " + motor.getTransmission());
+                                            System.out.println("Fuel Capacity: " + motor.getFuelCapacity() + " l");
+                                            System.out.println("Max Speed: " + motor.getMaxSpeed() + " km/h");
                                         });
+
+                                        // Needed Power Spec
 
                                         item.getSpec(NeededPowerSpec.class).ifPresent( neededPower -> {
                                             System.out.println("Needed power: " + neededPower.getNeededPower() + " hp");
                                         });
 
+                                        // Bale Spec
+
                                         item.getSpec(BaleSpec.class).ifPresent( bale -> {
-                                            if (Objects.equals(bale.getbaleType(), "Round")) {
-                                                System.out.println(bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
-                                            } else if (Objects.equals(bale.getbaleType(), "Square")) {
+                                            if (Objects.equals(bale.getbaleType(), "Round") && bale.getMinBaleDiameter() != 0) {
+                                                System.out.println("Round: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
+                                            } else if (Objects.equals("Square: " +bale.getbaleType(), "Square") && bale.getMinBaleLength() != 0) {
                                                 System.out.println(bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
                                             }
-                                            else {
+                                            else if (bale.getMinBaleDiameter() != 0 && bale.getMinBaleLength() != 0){
                                                 System.out.println("Round Bales: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
                                                 System.out.println("Square Bales: " + bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
                                             }
                                         });
 
+                                        // Working Width Spec
+
                                         item.getSpec(WorkingWidthSpec.class).ifPresent(width -> {
                                             System.out.println("Working Width: " + width.getWorkingWidth() + " meters");
                                         });
 
+                                        // Working Speed Spec
+
                                         item.getSpec(WorkingSpeedSpec.class).ifPresent(speed -> {
                                             System.out.println("Working Speed: " + speed.getWorkingSpeed() + " km/h");
                                         });
+
+                                        // Sowing Spec
 
                                         item.getSpec(SowingSpec.class).ifPresent(seed -> {
                                             if(seed.isUseDirectPlanting()) {
@@ -101,13 +123,17 @@ public class Main {
                                             else{
                                                 System.out.println("Doesn't have direct seed function.");
                                             }
-                                            System.out.println(seed.getSeedFruitTypeCategories());
+                                            System.out.println("Crop types: " + seed.getSeedFruitTypeCategories());
                                         });
 
+                                        // Fill Spec
+
                                         item.getSpec(FillSpec.class).ifPresent(fill -> {
-                                            System.out.print(fill.getFillUnits() + ": ");
-                                            if(fill.getCapacity() > 0){
-                                                System.out.println(fill.getCapacity() + " liters");
+                                            if (!fill.getFillUnits().equals("None")) {
+                                                System.out.print("Capacity of " + fill.getFillUnits() + ": ");
+                                                if (fill.getCapacity() > 0) {
+                                                    System.out.println(fill.getCapacity() + " " + fill.getDisplayUnit());
+                                                }
                                             }
                                         });
                                     }

@@ -38,11 +38,11 @@ public class StoreItemParser {
         }
 
         String category = "NONE";
-        if(document.getElementsByTagName("category").item(0) != null) {
-            category = document.getElementsByTagName("category").item(0).getTextContent();
+        if(document.getElementsByTagName("species").item(0) != null) {
+            category = document.getElementsByTagName("species").item(0).getTextContent().toLowerCase();
         }
         else {
-            category = document.getElementsByTagName("species").item(0).getTextContent();
+            category = document.getElementsByTagName("category").item(0).getTextContent().toLowerCase();
         }
 
         int price = 0;
