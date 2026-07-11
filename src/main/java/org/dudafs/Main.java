@@ -131,8 +131,11 @@ public class Main {
                                         item.getSpec(FillSpec.class).ifPresent(fill -> {
                                             if (!fill.getFillUnits().equals("None")) {
                                                 System.out.print("Capacity of " + fill.getFillUnits() + ": ");
-                                                if (fill.getCapacity() > 0) {
-                                                    System.out.println(fill.getCapacity() + " " + fill.getDisplayUnit());
+                                                if (fill.getMaxCapacity() > 0 && fill.getMinCapacity() > 0) {
+                                                    System.out.println(fill.getMinCapacity()  + "-" + fill.getMaxCapacity() + " " + fill.getDisplayUnit());
+                                                }
+                                                else {
+                                                    System.out.println(fill.getMaxCapacity() + " " + fill.getDisplayUnit());
                                                 }
                                             }
                                         });

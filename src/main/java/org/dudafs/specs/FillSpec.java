@@ -4,12 +4,14 @@ import org.dudafs.ItemSpec;
 
 public class FillSpec implements ItemSpec {
     private final String fillTypes;
-    private final int capacity;
+    private final int minCapacity;
+    private final int maxCapacity;
     private final String displayUnit;
 
-    public FillSpec(String fillTypes, int capacity, String displayUnit) {
+    public FillSpec(String fillTypes, int minCapacity,  int maxCapacity, String displayUnit) {
         this.fillTypes = fillTypes;
-        this.capacity = capacity;
+        this.minCapacity = minCapacity;
+        this.maxCapacity = maxCapacity;
         this.displayUnit = displayUnit;
     }
 
@@ -17,8 +19,16 @@ public class FillSpec implements ItemSpec {
         return fillTypes;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public int getMinCapacity() {
+        return minCapacity;
+    }
+
+    public int getMaxCapacity() {
+        return maxCapacity;
+    }
+
+    public String getFillTypes() {
+        return fillTypes;
     }
 
     public String getDisplayUnit() {

@@ -18,7 +18,9 @@ public class FillSpecParser {
         Element fillUnit = null;
         String fillType = "None";
         String displayUnit = "l";
-        int capacity = 0;
+        int capacity;
+        int minCapacity = Integer.MAX_VALUE;
+        int maxCapacity = Integer.MIN_VALUE;
 
         for(int j = 0; j < fillUnits.getLength(); j++) {
             fillUnitsContainer = (Element) document.getElementsByTagName("fillUnits").item(j);
@@ -34,8 +36,11 @@ public class FillSpecParser {
                     if (fillUnit.hasAttribute("capacity")) {
                         capacity = (int) Double.parseDouble(fillUnit.getAttribute("capacity"));
 
+                        maxCapacity = Math.max(maxCapacity, capacity);
+                        minCapacity = Math.min(minCapacity, capacity);
+
                         if ("SQUAREBALE".equals(fillType) || "ROUNDBALE".equals(fillType)) {
-                            displayUnit = (capacity == 1) ? "bale" : "bales";
+                            displayUnit = (maxCapacity == 1) ? "bale" : "bales";
                         }
                     }
                 }
@@ -46,11 +51,12 @@ public class FillSpecParser {
         if(fillUnit.hasAttribute("shopDisplayUnit")) {
             if(fillUnit.getAttribute("shopDisplayUnit").equals("CUBICMETER"))
             {
-                capacity = capacity / 1000;
+                minCapacity = minCapacity / 1000;
+                maxCapacity = maxCapacity / 1000;
                 displayUnit = "m³";
             }
         }
 
-        return Optional.of(new FillSpec(fillType, capacity, displayUnit));
+        return Optional.of(new FillSpec(fillType, minCapacity, maxCapacity, displayUnit));
     }
 }
