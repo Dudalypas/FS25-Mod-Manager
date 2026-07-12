@@ -6,12 +6,13 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.zip.ZipFile;
 
 public class StoreItemParser {
-    public StoreItem parseStoreItem(ZipFile zipFile, String storeItemPath) throws IOException, ParserConfigurationException, SAXException {
+    public StoreItem parseStoreItem(ZipFile zipFile, String storeItemPath, File gameFolder, TireIndex tireIndex) throws IOException, ParserConfigurationException, SAXException {
         Document document = null;
         try {
             document = XmlHelper.loadXmlFromZip(zipFile, storeItemPath);
@@ -57,6 +58,12 @@ public class StoreItemParser {
         MotorSpecParser motorSpecParser = new MotorSpecParser();
         Optional<MotorSpec> parsedMotorSpec = motorSpecParser.parse(document);
         parsedMotorSpec.ifPresent(storeItem::addSpec);
+
+        //Weight Spec
+
+        WeightSpecParser weightSpecParser = new WeightSpecParser(tireIndex);
+        Optional<WeightSpec> parsedWeightSpec = weightSpecParser.parse(document, gameFolder, zipFile);
+        parsedWeightSpec.ifPresent(storeItem::addSpec);
 
         // Needed Power Spec
 

@@ -6,9 +6,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.zip.ZipFile;
 import org.dudafs.ModScanner;
+import org.dudafs.specs.TireIndex;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -24,7 +26,12 @@ public class Main {
             System.out.println("Config file not found");
         }
 
-        File modsFolder = ModsFolderManager.getModsFolder(config, configFile);
+        File modsFolder = FolderManager.getFolder(config, configFile, "mods folder path");
+        File gameFolder = FolderManager.getFolder(config, configFile, "game folder path");
+
+        String gameFolderPath = gameFolder.toString().replace("\\", "/");
+        TireIndex tireIndex = new TireIndex();
+        tireIndex.buildIndex(new File(gameFolderPath + "/data/shared/wheels/tires"));
 
         boolean running = true;
 
@@ -60,13 +67,12 @@ public class Main {
                         try {
                             ModInfo modInfo = modParser.parseModDesc(zip);
                                 for (String storeItem : modInfo.storeItemPaths) {
-                                    StoreItem item = storeParser.parseStoreItem(zip, storeItem);
+                                    StoreItem item = storeParser.parseStoreItem(zip, storeItem, gameFolder, tireIndex);
                                     if (!storeItem.isEmpty() && !item.getCategory().equals("placeable")) {
 
                                         // Display Name
 
                                         System.out.println("\n" + item.getDisplayName());
-                                        System.out.println(item.getCategory());
 
                                         // Motor Spec
 
@@ -81,6 +87,7 @@ public class Main {
                                             System.out.println("Fuel Capacity: " + motor.getFuelCapacity() + " l");
                                             System.out.println("Max Speed: " + motor.getMaxSpeed() + " km/h");
                                         });
+
 
                                         // Needed Power Spec
 
@@ -99,6 +106,19 @@ public class Main {
                                             else if (bale.getMinBaleDiameter() != 0 && bale.getMinBaleLength() != 0){
                                                 System.out.println("Round Bales: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
                                                 System.out.println("Square Bales: " + bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
+                                            }
+                                        });
+
+                                        // Weight Spec
+
+                                        item.getSpec(WeightSpec.class).ifPresent( weight -> {
+                                            DecimalFormat tonFormat = new DecimalFormat("#.#");
+
+                                            if(weight.getWeight() > 1000) {
+                                                System.out.printf("Weight: %s t%n", tonFormat.format(weight.getWeight() / 1000.0));
+                                            }
+                                            else{
+                                                System.out.printf("Weight: %.0f kg%n", weight.getWeight());
                                             }
                                         });
 
@@ -131,7 +151,7 @@ public class Main {
                                         item.getSpec(FillSpec.class).ifPresent(fill -> {
                                             if (!fill.getFillUnits().equals("None")) {
                                                 System.out.print("Capacity of " + fill.getFillUnits() + ": ");
-                                                if (fill.getMaxCapacity() > 0 && fill.getMinCapacity() > 0) {
+                                                if (fill.getMaxCapacity() > 0 && fill.getMinCapacity() > 0 && fill.getMaxCapacity() != fill.getMinCapacity()) {
                                                     System.out.println(fill.getMinCapacity()  + "-" + fill.getMaxCapacity() + " " + fill.getDisplayUnit());
                                                 }
                                                 else {
@@ -147,7 +167,7 @@ public class Main {
                     });
                     break;
                 case "3":
-                    modsFolder = ModsFolderManager.changeModsFolder(config, configFile);
+                    modsFolder = FolderManager.changeFolder(config, configFile, "modsFolderPath");
                     break;
                 case "4":
                     System.out.println("Exiting...");
