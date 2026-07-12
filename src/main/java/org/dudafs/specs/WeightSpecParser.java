@@ -73,15 +73,14 @@ public class WeightSpecParser {
             for (int i = 0; i < wheels.getLength(); i++) {
                 Element wheel = (Element) wheels.item(i);
                 Element physics = (Element) wheel.getElementsByTagName("physics").item(0);
-                if(physics != null) {
-                    if(physics.hasAttribute("mass")) {
-                        mass += 1000 * Double.parseDouble(physics.getAttribute("mass"));
-                    }
-                }
-
+                boolean hasLocalMass = physics != null && physics.hasAttribute("mass");
                 String path = wheel.getAttribute("filename");
                 String dimensions = wheel.getAttribute("dimensions");
-                if(!path.isEmpty()) {
+
+                if (hasLocalMass) {
+                    mass += 1000 * Double.parseDouble(physics.getAttribute("mass"));
+                }
+                else if(!path.isEmpty()) {
 
                     // File path corrections
                     String gameFolderPath = gameFolder.getCanonicalPath();
@@ -126,6 +125,9 @@ public class WeightSpecParser {
                             System.out.println("No tire match: " + firstDimension + " " + brand + " " + category);
                         }
                     }
+                }
+                else{
+                    mass += 100; // Default value of 100 kg per wheel if no value provided
                 }
             }
         }
