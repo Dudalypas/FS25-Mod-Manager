@@ -84,7 +84,7 @@ public class Main {
                                                 System.out.println("Power: " + motor.getMinPower() + "-" + motor.getMaxPower() + " hp");
                                             }
                                             System.out.println("Transmission: " + motor.getTransmission());
-                                            System.out.println("Fuel Capacity: " + motor.getFuelCapacity() + " l");
+                                            System.out.println("Fuel Capacity: " + motor.getFuelCapacity() + " " + motor.getDisplayUnit());
                                             System.out.println("Max Speed: " + motor.getMaxSpeed() + " km/h");
                                         });
 

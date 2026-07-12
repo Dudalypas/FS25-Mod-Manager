@@ -1,16 +1,18 @@
 package org.dudafs.specs;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.util.Optional;
 
 public class NeededPowerSpecParser {
     public Optional<NeededPowerSpec> parse(Document document) {
-        if(document.getElementsByTagName("neededPower").item(0) == null) {
+        Element neededPowerElement = (Element) document.getElementsByTagName("neededPower").item(0);
+        if(neededPowerElement == null) {
             return Optional.empty();
         }
-        int NeededPower = Integer.parseInt(document.getElementsByTagName("neededPower").item(0).getTextContent());
+        int neededPower = Integer.parseInt(neededPowerElement.getTextContent());
 
-        return Optional.of(new NeededPowerSpec(NeededPower));
+        return Optional.of(new NeededPowerSpec(neededPower));
     }
 }

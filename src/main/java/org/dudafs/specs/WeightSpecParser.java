@@ -10,6 +10,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipFile;
@@ -58,9 +59,10 @@ public class WeightSpecParser {
             for (int i = 0; i < fillUnitNodes.getLength(); i++) {
                 Element fillUnit = (Element) fillUnitNodes.item(i);
 
-                String fillType = fillUnit.getAttribute("fillTypes").toUpperCase();
-                if (densityKgPerLiter.containsKey(fillType)) {
-                    mass += Double.parseDouble(fillUnit.getAttribute("capacity")) * densityKgPerLiter.get(fillType);
+                String fillType = fillUnit.getAttribute("fillTypes").trim().toUpperCase(Locale.ROOT);
+                Double density = densityKgPerLiter.get(fillType);
+                if (densityKgPerLiter.get(fillType) != null && fillUnit.hasAttribute("capacity")) {
+                    mass += Double.parseDouble(fillUnit.getAttribute("capacity")) * density;
                 }
             }
         }
@@ -96,8 +98,8 @@ public class WeightSpecParser {
 
                     // Wheel mass calculation
                     if(wheelDoc != null) {
-                        if (wheelDoc.getElementsByTagName("physics").item(0) != null) {
-                            physics = (Element) wheelDoc.getElementsByTagName("physics").item(0);
+                        physics = (Element) wheelDoc.getElementsByTagName("physics").item(0);
+                        if (physics != null) {
                             mass += 1000 * Double.parseDouble(physics.getAttribute("mass"));
                         }
                     }
@@ -132,6 +134,6 @@ public class WeightSpecParser {
             }
         }
 
-        return Optional.of(new WeightSpec((int) mass));
+        return Optional.of(new WeightSpec((int) Math.round(mass)));
     }
 }
