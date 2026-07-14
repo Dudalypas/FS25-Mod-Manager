@@ -13,7 +13,7 @@ import org.dudafs.ModScanner;
 import org.dudafs.specs.TireIndex;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.println("FS25 Equipment Indexer");
 
@@ -32,6 +32,12 @@ public class Main {
         String gameFolderPath = gameFolder.toString().replace("\\", "/");
         TireIndex tireIndex = new TireIndex();
         tireIndex.buildIndex(new File(gameFolderPath + "/data/shared/wheels/tires"));
+
+        CategoryIndex seedCategoryIndex = new CategoryIndex();
+        seedCategoryIndex.buildIndex(new File(gameFolderPath + "/data/maps/maps_fruitTypes.xml"), "fruitTypeCategory");
+
+        CategoryIndex fillCategoryIndex = new CategoryIndex();
+        fillCategoryIndex.buildIndex(new File(gameFolderPath + "/data/maps/maps_fillTypes.xml"), "fillTypeCategory");
 
         boolean running = true;
 
@@ -143,19 +149,32 @@ public class Main {
                                             else{
                                                 System.out.println("Doesn't have direct seed function.");
                                             }
-                                            System.out.println("Crop types: " + seed.getSeedFruitTypeCategories());
+
+                                            Set<String> cropTypes = seedCategoryIndex.find(seed.getSeedFruitTypeCategories().trim().toUpperCase(Locale.ROOT));
+
+                                            System.out.println("Crop types: " + cropTypes);
                                         });
 
                                         // Fill Spec
 
                                         item.getSpec(FillSpec.class).ifPresent(fill -> {
                                             if (!fill.getFillUnits().equals("None")) {
-                                                System.out.print("Capacity of " + fill.getFillUnits() + ": ");
+                                                System.out.print("Capacity: ");
                                                 if (fill.getMaxCapacity() > 0 && fill.getMinCapacity() > 0 && fill.getMaxCapacity() != fill.getMinCapacity()) {
                                                     System.out.println(fill.getMinCapacity()  + "-" + fill.getMaxCapacity() + " " + fill.getDisplayUnit());
                                                 }
                                                 else {
                                                     System.out.println(fill.getMaxCapacity() + " " + fill.getDisplayUnit());
+                                                }
+
+                                                Set<String> fillTypes = fillCategoryIndex.find(fill.getFillTypes().trim().toUpperCase(Locale.ROOT));
+
+                                                System.out.print("Fill types: ");
+                                                if(!fillTypes.isEmpty()) {
+                                                    System.out.println(fillTypes);
+                                                }
+                                                else{
+                                                    System.out.println(fill.getFillTypes().trim().toUpperCase(Locale.ROOT));
                                                 }
                                             }
                                         });

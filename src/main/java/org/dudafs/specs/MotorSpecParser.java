@@ -1,5 +1,6 @@
 package org.dudafs.specs;
 
+import org.dudafs.LocalizationResolver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -11,8 +12,8 @@ import java.util.Optional;
 public class MotorSpecParser {
 
     public Optional<MotorSpec> parse(Document document) {
-        int minPower = 0;
-        int maxPower = 0;
+        int minPower = Integer.MAX_VALUE;
+        int maxPower = Integer.MIN_VALUE;
         int maxSpeed = 0;
         int fuelCapacity = 0;
         NodeList fillUnitNodes = null;
@@ -23,22 +24,25 @@ public class MotorSpecParser {
             return Optional.empty();
         }
 
-        Element firstMotorConfiguration = (Element) items.item(0);
-        Element lastMotorConfiguration = (Element) items.item(items.getLength() - 1);
-        Element power = (Element) firstMotorConfiguration.getElementsByTagName("power").item(0);
+        for(int i = 0; i < items.getLength(); i++) {
+            Element motorConfiguration = (Element) items.item(i);
+            Element power = (Element) document.getElementsByTagName("power").item(0);
 
-        // TODO make it a cycle, because mods do not necessarily order them by horsepower, most do, but ladadada
-        if (firstMotorConfiguration.hasAttribute("hp")) {
-            minPower = Integer.parseInt(firstMotorConfiguration.getAttribute("hp"));
-            maxPower = lastMotorConfiguration.hasAttribute("hp") ? Integer.parseInt(lastMotorConfiguration.getAttribute("hp")) : minPower;
-        } else if (power != null) {
-            minPower = Integer.parseInt(power.getTextContent());
-            maxPower = minPower;
+            if (motorConfiguration.hasAttribute("hp")) {
+                minPower = Math.min(minPower, Integer.parseInt(motorConfiguration.getAttribute("hp")));
+                maxPower = Math.max(maxPower, Integer.parseInt(motorConfiguration.getAttribute("hp")));
+            } else if (power != null) {
+                minPower = Integer.parseInt(power.getTextContent());
+                maxPower = minPower;
+            }
         }
 
         Element transmission = (Element) document.getElementsByTagName("transmission").item(0);
         if (transmission != null) {
-            transmissionName = transmission.getAttribute("name");
+            transmissionName = LocalizationResolver.resolve(transmission.getAttribute("name"));
+            if(transmissionName == null){
+                transmissionName = transmission.getAttribute("name");
+            }
         }
 
         Element motor = (Element) document.getElementsByTagName("motor").item(0);
