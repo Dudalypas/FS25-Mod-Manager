@@ -1,6 +1,5 @@
-package org.dudafs.specs;
+package org.dudafs;
 
-import org.dudafs.XmlHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -9,15 +8,15 @@ import java.io.File;
 import java.util.*;
 
 public class CategoryIndex {
-    private static Map<String, Set<String>> categoryToValues = new HashMap<>();
+    private static final Map<String, Set<String>> categoryToValues = new HashMap<>();
 
-    public void buildIndex(File defaultFile, String categoryTagName) throws Exception {
+    public static void buildIndex(File defaultFile, String categoryTagName) throws Exception {
         if(defaultFile != null && defaultFile.exists()) {
             loadInto(defaultFile, categoryTagName);
         }
     }
 
-    private void loadInto(File file, String categoryTagName) throws Exception {
+    private static void loadInto(File file, String categoryTagName) throws Exception {
         Document document = XmlHelper.loadXml(file.getAbsolutePath());
         if(document == null) return;
         NodeList categories = document.getElementsByTagName(categoryTagName);
@@ -29,7 +28,7 @@ public class CategoryIndex {
         }
     }
 
-    public Set<String> find (String categoryName) {
+    public static Set<String> find (String categoryName) {
         return categoryToValues.getOrDefault(categoryName, Collections.emptySet());
     }
 }

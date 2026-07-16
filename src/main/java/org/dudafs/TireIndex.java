@@ -1,6 +1,5 @@
-package org.dudafs.specs;
+package org.dudafs;
 
-import org.dudafs.XmlHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -19,9 +18,9 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class TireIndex {
-    private final Map<String, TireInfo> index = new HashMap<>();
+    private static final Map<String, TireInfo> index = new HashMap<>();
 
-    public void buildIndex(File tiresRootFolder) throws IOException {
+    public static void buildIndex(File tiresRootFolder) throws IOException {
         try(Stream<Path> paths = Files.walk(tiresRootFolder.toPath())) {
             paths.filter(path -> path.toString().endsWith(".xml")).forEach(xmlPath -> {
                 try {
@@ -33,7 +32,7 @@ public class TireIndex {
         }
     }
 
-    private void indexTireFile(Path xmlPath) throws IOException, ParserConfigurationException, SAXException {
+    private static void indexTireFile(Path xmlPath) throws IOException, ParserConfigurationException, SAXException {
         try {
             String content = Files.readString(xmlPath);
             content = XmlHelper.sanitizeBom(content);
@@ -69,11 +68,11 @@ public class TireIndex {
         }
     }
 
-    public TireInfo find(String dimensions, String brand, String category){
+    public static TireInfo find(String dimensions, String brand, String category){
         return index.get(buildKey(dimensions, brand, category));
     }
 
-    private String buildKey(String dimensions, String brand, String category) {
+    private static String buildKey(String dimensions, String brand, String category) {
         return dimensions + "|" + brand + "|" + category;
     }
 }

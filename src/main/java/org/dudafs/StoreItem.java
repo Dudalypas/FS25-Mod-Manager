@@ -1,5 +1,7 @@
 package org.dudafs;
 
+import org.dudafs.specs.ItemSpec;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

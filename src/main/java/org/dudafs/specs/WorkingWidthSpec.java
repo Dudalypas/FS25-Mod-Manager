@@ -1,6 +1,6 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
+import java.util.Map;
 
 public class WorkingWidthSpec implements ItemSpec {
     private final double workingWidth;
@@ -11,5 +11,10 @@ public class WorkingWidthSpec implements ItemSpec {
 
     public double getWorkingWidth() {
         return workingWidth;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields() {
+        return Map.of("WorkingWidth_m", Double.toString(workingWidth));
     }
 }

@@ -1,16 +1,14 @@
 package org.dudafs;
 
 import org.dudafs.specs.*;
-import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.zip.ZipFile;
-import org.dudafs.ModScanner;
-import org.dudafs.specs.TireIndex;
+
+import static org.dudafs.CategoryIndex.find;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -30,14 +28,6 @@ public class Main {
         File gameFolder = FolderManager.getFolder(config, configFile, "game folder path");
 
         String gameFolderPath = gameFolder.toString().replace("\\", "/");
-        TireIndex tireIndex = new TireIndex();
-        tireIndex.buildIndex(new File(gameFolderPath + "/data/shared/wheels/tires"));
-
-        CategoryIndex seedCategoryIndex = new CategoryIndex();
-        seedCategoryIndex.buildIndex(new File(gameFolderPath + "/data/maps/maps_fruitTypes.xml"), "fruitTypeCategory");
-
-        CategoryIndex fillCategoryIndex = new CategoryIndex();
-        fillCategoryIndex.buildIndex(new File(gameFolderPath + "/data/maps/maps_fillTypes.xml"), "fillTypeCategory");
 
         boolean running = true;
 
@@ -69,11 +59,12 @@ public class Main {
                 case "2":
                     ModDescParser modParser = new ModDescParser();
                     StoreItemParser storeParser = new StoreItemParser();
+                    List<StoreItem> items = new ArrayList<>();
                     ModScanner.forEachModZip(modsFolder, zip -> {
                         try {
                             ModInfo modInfo = modParser.parseModDesc(zip);
                                 for (String storeItem : modInfo.storeItemPaths) {
-                                    StoreItem item = storeParser.parseStoreItem(zip, storeItem, gameFolder, tireIndex);
+                                    StoreItem item = storeParser.parseStoreItem(zip, storeItem, gameFolder);
                                     if (!storeItem.isEmpty() && !item.getCategory().equals("placeable")) {
 
                                         // Display Name
@@ -106,8 +97,8 @@ public class Main {
                                         item.getSpec(BaleSpec.class).ifPresent( bale -> {
                                             if (Objects.equals(bale.getbaleType(), "Round") && bale.getMinBaleDiameter() != 0) {
                                                 System.out.println("Round: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
-                                            } else if (Objects.equals("Square: " +bale.getbaleType(), "Square") && bale.getMinBaleLength() != 0) {
-                                                System.out.println(bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
+                                            } else if (Objects.equals(bale.getbaleType(), "Square") && bale.getMinBaleLength() != 0) {
+                                                System.out.println("Square: " + bale.getMinBaleLength() + "-" + bale.getMaxBaleLength() + " cm");
                                             }
                                             else if (bale.getMinBaleDiameter() != 0 && bale.getMinBaleLength() != 0){
                                                 System.out.println("Round Bales: " + bale.getMinBaleDiameter() + "-" + bale.getMaxBaleDiameter() + " cm");
@@ -150,7 +141,7 @@ public class Main {
                                                 System.out.println("Doesn't have direct seed function.");
                                             }
 
-                                            Set<String> cropTypes = seedCategoryIndex.find(seed.getSeedFruitTypeCategories().trim().toUpperCase(Locale.ROOT));
+                                            Set<String> cropTypes = find(seed.getSeedFruitTypeCategories().trim().toUpperCase(Locale.ROOT));
 
                                             System.out.println("Crop types: " + cropTypes);
                                         });
@@ -167,7 +158,7 @@ public class Main {
                                                     System.out.println(fill.getMaxCapacity() + " " + fill.getDisplayUnit());
                                                 }
 
-                                                Set<String> fillTypes = fillCategoryIndex.find(fill.getFillTypes().trim().toUpperCase(Locale.ROOT));
+                                                Set<String> fillTypes = find(fill.getFillTypes().trim().toUpperCase(Locale.ROOT));
 
                                                 System.out.print("Fill types: ");
                                                 if(!fillTypes.isEmpty()) {
@@ -178,12 +169,21 @@ public class Main {
                                                 }
                                             }
                                         });
+
+                                        items.add(item);
                                     }
                                 }
+
                         } catch (ParserConfigurationException | IOException | SAXException e) {
                             System.out.println("Failed to parse" + zip);
                         }
                     });
+
+                    System.out.println("Export to CSV?");
+                    String answer = scanner.nextLine();
+                    if(answer.equalsIgnoreCase("yes")) {
+                        SaveCSV.save(items);
+                    }
                     break;
                 case "3":
                     modsFolder = FolderManager.changeFolder(config, configFile, "modsFolderPath");

@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.zip.ZipFile;
 
 public class StoreItemParser {
-    public StoreItem parseStoreItem(ZipFile zipFile, String storeItemPath, File gameFolder, TireIndex tireIndex) throws IOException, ParserConfigurationException, SAXException {
+    public StoreItem parseStoreItem(ZipFile zipFile, String storeItemPath, File gameFolder) throws IOException, ParserConfigurationException, SAXException {
         Document document = null;
         try {
             document = XmlHelper.loadXmlFromZip(zipFile, storeItemPath);
@@ -61,7 +61,7 @@ public class StoreItemParser {
 
         //Weight Spec
 
-        WeightSpecParser weightSpecParser = new WeightSpecParser(tireIndex);
+        WeightSpecParser weightSpecParser = new WeightSpecParser();
         Optional<WeightSpec> parsedWeightSpec = weightSpecParser.parse(document, gameFolder, zipFile);
         parsedWeightSpec.ifPresent(storeItem::addSpec);
 

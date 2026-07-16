@@ -1,6 +1,7 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class BaleSpec implements ItemSpec {
     private final String baleType;
@@ -35,5 +36,17 @@ public class BaleSpec implements ItemSpec {
 
     public int getMaxBaleLength() {
         return maxBaleLength;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields() {
+        Map<String, String> fields = new LinkedHashMap<>();
+
+        fields.put("minBaleDiameter_cm", Integer.toString(minBaleDiameter));
+        fields.put("maxBaleDiameter_cm", Integer.toString(maxBaleDiameter));
+        fields.put("minBaleLength_cm", Integer.toString(minBaleLength));
+        fields.put("maxBaleLength_cm", Integer.toString(maxBaleLength));
+
+        return fields;
     }
 }

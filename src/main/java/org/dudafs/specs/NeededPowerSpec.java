@@ -1,6 +1,6 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
+import java.util.Map;
 
 public class NeededPowerSpec implements ItemSpec {
     int neededPower;
@@ -11,5 +11,10 @@ public class NeededPowerSpec implements ItemSpec {
 
     public int getNeededPower() {
         return neededPower;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields(){
+        return Map.of("neededPower_hp", String.valueOf(neededPower));
     }
 }

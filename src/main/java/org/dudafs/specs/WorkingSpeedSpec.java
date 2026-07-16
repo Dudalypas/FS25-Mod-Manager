@@ -1,6 +1,6 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
+import java.util.Map;
 
 public class WorkingSpeedSpec implements ItemSpec {
     private final double workingSpeed;
@@ -11,5 +11,10 @@ public class WorkingSpeedSpec implements ItemSpec {
 
     public double getWorkingSpeed() {
         return workingSpeed;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields() {
+        return Map.of("WorkingSpeed_km/h", Double.toString(workingSpeed));
     }
 }

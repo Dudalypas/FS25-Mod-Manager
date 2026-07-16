@@ -1,8 +1,7 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MotorSpec implements ItemSpec {
     private final Integer minPower, maxPower;
@@ -42,5 +41,17 @@ public class MotorSpec implements ItemSpec {
 
     public String getDisplayUnit() {
         return displayUnit;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields() {
+        Map <String, String> fields = new LinkedHashMap<>();
+        fields.put("MinPower", minPower.toString());
+        fields.put("MaxPower", maxPower.toString());
+        fields.put("Transmission", transmission);
+        fields.put("MaxSpeed_km/h", Integer.toString(maxSpeed));
+        fields.put("FuelCapacity_" + displayUnit, Integer.toString(fuelCapacity));
+
+        return fields;
     }
 }

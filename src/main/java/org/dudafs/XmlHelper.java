@@ -79,4 +79,12 @@ public class XmlHelper {
 
         return builder.parse(new InputSource(new StringReader(content)));
     }
+
+    public static String escape(String value) {
+        if (value == null) return "";
+        if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
 }

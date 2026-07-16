@@ -1,7 +1,7 @@
 package org.dudafs.specs;
 
-import org.dudafs.FolderManager;
-import org.dudafs.XmlHelper;
+import org.dudafs.TireIndex;
+import org.dudafs.TireInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -15,14 +15,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipFile;
 
+import static org.dudafs.TireIndex.find;
 import static org.dudafs.XmlHelper.loadXml;
 import static org.dudafs.XmlHelper.loadXmlFromZip;
 
 public class WeightSpecParser {
-    private final TireIndex tireIndex;
 
-    public WeightSpecParser(TireIndex tireIndex) {
-        this.tireIndex = tireIndex;
+    public WeightSpecParser() {
     }
 
     public Optional<WeightSpec> parse(Document document, File gameFolder, ZipFile zipFile) throws IOException, ParserConfigurationException, SAXException {
@@ -119,7 +118,7 @@ public class WeightSpecParser {
 
                     if(!brand.isEmpty()) {
 
-                        TireInfo tire = tireIndex.find(firstDimension, brand, category);
+                        TireInfo tire = find(firstDimension, brand, category);
                         if (tire != null) {
                             mass += tire.mass;
                         }

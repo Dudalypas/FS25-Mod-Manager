@@ -1,6 +1,7 @@
 package org.dudafs.specs;
 
-import org.dudafs.ItemSpec;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class FillSpec implements ItemSpec {
     private final String fillTypes;
@@ -33,5 +34,15 @@ public class FillSpec implements ItemSpec {
 
     public String getDisplayUnit() {
         return displayUnit;
+    }
+
+    @Override
+    public Map<String, String> toCsvFields() {
+        Map<String, String> fields = new LinkedHashMap<>();
+        fields.put("MinCapacity", Integer.toString(minCapacity));
+        fields.put("MaxCapacity", Integer.toString(maxCapacity));
+        fields.put("fillTypes", fillTypes);
+
+        return fields;
     }
 }
