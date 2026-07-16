@@ -57,6 +57,10 @@ public class FillSpecParser {
             }
         }
 
+        if(fillType.equals("None") || minCapacity == Integer.MAX_VALUE || maxCapacity == Integer.MIN_VALUE) {
+            return Optional.empty();
+        }
+
         return Optional.of(new FillSpec(fillType, minCapacity, maxCapacity, displayUnit));
     }
 }
