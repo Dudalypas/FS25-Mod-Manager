@@ -4,13 +4,24 @@ import org.dudafs.xml.XmlHelper;
 import org.dudafs.model.StoreItem;
 import org.dudafs.model.specs.ItemSpec;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
 public class CsvExporter {
-    public static void export(List<StoreItem> items, String outputPath) throws IOException {
+    public static void export(List<StoreItem> items) throws IOException {
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int fileResult = fileChooser.showOpenDialog(null);
+
+        if (fileResult != JFileChooser.APPROVE_OPTION) {
+            System.out.println("No folder selected.");
+        }
+        String outputPath = fileChooser.getSelectedFile().getAbsolutePath();
+
         LinkedHashSet<String> columns = new LinkedHashSet<>();
         List<Map<String, String>> rows = new ArrayList<>();
 
@@ -37,5 +48,6 @@ public class CsvExporter {
                 writer.write(String.join(",", values) + "\n");
             }
         }
+
     }
 }

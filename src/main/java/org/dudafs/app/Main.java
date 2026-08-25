@@ -1,14 +1,13 @@
 package org.dudafs.app;
 
+import org.dudafs.export.CsvExporter;
 import org.dudafs.filesystem.FolderManager;
 import org.dudafs.model.ModInfo;
-import org.dudafs.export.SaveCSV;
 import org.dudafs.model.StoreItem;
 import org.dudafs.model.specs.*;
 import org.dudafs.parser.ModDescParser;
 import org.dudafs.scanner.ModScanner;
 import org.dudafs.parser.StoreItemParser;
-import org.dudafs.specs.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -190,7 +189,7 @@ public class Main {
                     System.out.println("Export to CSV?");
                     String answer = scanner.nextLine();
                     if(answer.equalsIgnoreCase("yes")) {
-                        SaveCSV.save(items);
+                        CsvExporter.export(items);
                     }
                     break;
                 case "3":

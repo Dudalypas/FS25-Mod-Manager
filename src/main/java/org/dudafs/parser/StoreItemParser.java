@@ -3,7 +3,6 @@ package org.dudafs.parser;
 import org.dudafs.model.StoreItem;
 import org.dudafs.model.specs.*;
 import org.dudafs.xml.XmlHelper;
-import org.dudafs.specs.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
