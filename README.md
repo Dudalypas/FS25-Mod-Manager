@@ -8,7 +8,7 @@ The tool scans a local FS25 mods folder, parses mod metadata and store item spec
 
 ## Milestones
 
-### 1. Console MVP (in progress)
+### 1. Console MVP (Done)
 - Scan a mods folder and list all installed mod packages (name, author, version)
 - Parse store item data (brand, model, category, power, working specs, capacity, etc.) directly from each mod's XML
 - Handle real-world XML quirks (unescaped characters, BOM) from inconsistently-authored mod files, as not everything is from ModHub usually
@@ -16,7 +16,7 @@ The tool scans a local FS25 mods folder, parses mod metadata and store item spec
 - Filter equipment by category
 - Export data to .csv / .xml
 
-### 2. Desktop GUI (planned)
+### 2. Desktop GUI (In progress)
 - JavaFX interface for browsing and filtering mods/equipment visually
 - Replace console menu with a proper UI
 
