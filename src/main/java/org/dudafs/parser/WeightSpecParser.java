@@ -47,7 +47,9 @@ public class WeightSpecParser {
         // Calculates item weight without liquids or tires
         for (int i = 0; i < components.getLength(); i++) {
             Element component = (Element) components.item(i);
-            mass += Double.parseDouble(component.getAttribute("mass"));
+            if(component.hasAttribute("mass")) {
+                mass += Double.parseDouble(component.getAttribute("mass"));
+            }
         }
 
         Element fillUnits = (Element) document.getElementsByTagName("fillUnits").item(0);
