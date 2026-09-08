@@ -65,9 +65,12 @@ public class MotorSpecParser {
                 fuelCapacity = (int) Double.parseDouble(fillUnit.getAttribute("capacity"));
                 displayUnit = fillUnit.getAttribute("unitTextOverride");
             }
+
             if (Objects.equals(displayUnit, "$l10n_unit_kw")) {
                 displayUnit = "kW";
-            } else {
+            }
+            if (Objects.equals(displayUnit, "$l10n_unit_literShort"))
+            {
                 displayUnit = "l";
             }
         }
