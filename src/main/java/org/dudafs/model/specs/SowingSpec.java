@@ -7,27 +7,39 @@ import java.util.Map;
 import static org.dudafs.index.CategoryIndex.find;
 
 public class SowingSpec implements ItemSpec {
-    private final boolean useDirectPlanting;
-    private final String seedFruitTypeCategories;
+    public enum SeedFruitSourceType{
+        CATEGORY, EXPLICIT_TYPES
+    }
 
-    public SowingSpec(boolean useDirectPlanting, String seedFruitTypeCategories) {
+    private final boolean useDirectPlanting;
+    private final SeedFruitSourceType seedFruitSourceType;
+    private final String seedFruitValue;
+
+
+    public SowingSpec(boolean useDirectPlanting, SeedFruitSourceType seedFruitSourceType, String seedFruitValue) {
         this.useDirectPlanting = useDirectPlanting;
-        this.seedFruitTypeCategories = seedFruitTypeCategories;
+        this.seedFruitSourceType = seedFruitSourceType;
+        this.seedFruitValue = seedFruitValue;
     }
 
     public boolean isUseDirectPlanting() {
         return useDirectPlanting;
     }
 
-    public String getSeedFruitTypeCategories() {
-        return seedFruitTypeCategories;
+    public SeedFruitSourceType getSeedFruitSourceType() {
+        return seedFruitSourceType;
+    }
+
+    public String getSeedFruitValue() {
+        return seedFruitValue;
     }
 
     @Override
     public Map<String, String> toCsvFields() {
         Map<String, String> fields = new LinkedHashMap<>();
         fields.put("useDirectPlanting", String.valueOf(useDirectPlanting));
-        fields.put("seedFruitTypeCategories", String.valueOf(find(seedFruitTypeCategories.trim().toUpperCase(Locale.ROOT))));
+        fields.put("seedFruitSourceType", String.valueOf(seedFruitSourceType));
+        fields.put("seedFruitValue", String.valueOf(find(seedFruitValue.trim().toUpperCase(Locale.ROOT))));
         return fields;
     }
 }
