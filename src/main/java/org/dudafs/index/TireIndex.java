@@ -23,6 +23,8 @@ public class TireIndex {
     private static final Map<String, TireInfo> index = new HashMap<>();
 
     public static void buildIndex(File tiresRootFolder) throws IOException {
+        index.clear();
+
         try(Stream<Path> paths = Files.walk(tiresRootFolder.toPath())) {
             paths.filter(path -> path.toString().endsWith(".xml")).forEach(xmlPath -> {
                 try {
