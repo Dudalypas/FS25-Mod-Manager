@@ -40,7 +40,7 @@ public class FillSpecParser {
                         maxCapacity = Math.max(maxCapacity, capacity);
                         minCapacity = Math.min(minCapacity, capacity);
 
-                        if ("SQUAREBALE".equals(fillType) || "ROUNDBALE".equals(fillType)) {
+                        if ("squarebale".equals(fillType) || "roundbale".equals(fillType)) {
                             displayUnit = (maxCapacity == 1) ? "bale" : "bales";
                         }
                     }
@@ -52,8 +52,6 @@ public class FillSpecParser {
         if(fillUnit.hasAttribute("shopDisplayUnit")) {
             if(fillUnit.getAttribute("shopDisplayUnit").equals("CUBICMETER"))
             {
-                minCapacity = minCapacity / 1000;
-                maxCapacity = maxCapacity / 1000;
                 displayUnit = "m³";
             }
         }
