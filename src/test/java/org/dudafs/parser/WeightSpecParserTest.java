@@ -33,8 +33,9 @@ public class WeightSpecParserTest {
         if(resource == null) {
             throw new IllegalStateException("testFolder not found");
         }
-        zipPath = Paths.get(resource.toURI());
-        gameFolder = new File(String.valueOf(zipPath));
+        Path testFolder = Paths.get(resource.toURI());
+        zipPath = testFolder.resolve("test.zip");
+        gameFolder = new File(String.valueOf(testFolder.toFile()));
 
         weightSpecParser = new WeightSpecParser();
 
@@ -95,7 +96,7 @@ public class WeightSpecParserTest {
             throw new IllegalStateException("Test xml not found");
         }
 
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isPresent());
@@ -165,7 +166,7 @@ public class WeightSpecParserTest {
         if(document == null) {
             throw new IllegalStateException("Test xml not found");
         }
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isPresent());
@@ -238,7 +239,7 @@ public class WeightSpecParserTest {
         if(document == null) {
             throw new IllegalStateException("Test xml not found");
         }
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isPresent());
@@ -317,7 +318,7 @@ public class WeightSpecParserTest {
         if(document == null) {
             throw new IllegalStateException("Test xml not found");
         }
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isPresent());
@@ -390,7 +391,7 @@ public class WeightSpecParserTest {
         if(document == null) {
             throw new IllegalStateException("Test xml not found");
         }
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isPresent());
@@ -423,7 +424,7 @@ public class WeightSpecParserTest {
         if(document == null) {
             throw new IllegalStateException("Test xml not found");
         }
-        try (ZipFile zip = new ZipFile(zipPath + "\\test.zip")) {
+        try (ZipFile zip = new ZipFile(zipPath.toFile())) {
             Optional<WeightSpec> result = weightSpecParser.parse(document, gameFolder, zip);
 
             assertTrue(result.isEmpty());
