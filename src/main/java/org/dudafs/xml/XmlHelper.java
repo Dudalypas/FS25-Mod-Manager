@@ -79,6 +79,26 @@ public class XmlHelper {
         return builder.parse(new InputSource(new StringReader(content)));
     }
 
+    public static Document loadXmlFromString(String xml) throws IOException, ParserConfigurationException, SAXException {
+        if (xml == null || xml.isEmpty()) {
+            System.out.println("Xml is empty");
+            return null;
+        }
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setIgnoringComments(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        xml = xml.replaceAll("(?s)<!--.*?-->", "");
+        xml = xml.replaceAll(
+                "(?<=[\"'])(?=[A-Za-z_:][A-Za-z0-9_.:-]*\\s*=)",
+                " "
+        );
+        xml = XmlHelper.sanitizeBom(xml);
+        xml = XmlHelper.fixUnescapedAmpersands(xml);
+
+        return builder.parse(new InputSource(new StringReader(xml)));
+    }
+
     public static String escape(String value) {
         if (value == null) return "";
         if (value.contains(",") || value.contains("\"") || value.contains("\n")) {

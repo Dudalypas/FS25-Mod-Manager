@@ -94,7 +94,7 @@ public class StoreItemParser {
         // Sowing Spec
 
         SowingSpecParser sowingSpecParser = new SowingSpecParser();
-        Optional<SowingSpec> parsedSowingSpec = sowingSpecParser.parseSowingSpec(document);
+        Optional<SowingSpec> parsedSowingSpec = sowingSpecParser.parse(document);
         parsedSowingSpec.ifPresent(storeItem::addSpec);
 
         // Fill Spec

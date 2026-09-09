@@ -2,6 +2,7 @@ package org.dudafs.app;
 
 import org.dudafs.export.CsvExporter;
 import org.dudafs.filesystem.FolderManager;
+import org.dudafs.index.TireIndex;
 import org.dudafs.model.ModInfo;
 import org.dudafs.model.StoreItem;
 import org.dudafs.model.specs.*;
@@ -12,8 +13,12 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.zip.ZipFile;
 
 import static org.dudafs.index.CategoryIndex.find;
 
@@ -35,6 +40,7 @@ public class Main {
         File gameFolder = FolderManager.getFolder(config, configFile, "game folder path");
 
         String gameFolderPath = gameFolder.toString().replace("\\", "/");
+        TireIndex.buildIndex(new File(gameFolderPath + "/data/shared/wheels/tires"));
 
         boolean running = true;
 
@@ -148,7 +154,7 @@ public class Main {
                                                 System.out.println("Doesn't have direct seed function.");
                                             }
 
-                                            Set<String> cropTypes = find(seed.getSeedFruitTypeCategories().trim().toUpperCase(Locale.ROOT));
+                                            Set<String> cropTypes = find(seed.getSeedFruitValue().trim().toUpperCase(Locale.ROOT));
 
                                             System.out.println("Crop types: " + cropTypes);
                                         });

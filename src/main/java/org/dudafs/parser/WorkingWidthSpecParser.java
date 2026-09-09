@@ -12,7 +12,7 @@ public class WorkingWidthSpecParser {
         }
         double workingWidth = Double.parseDouble(document.getElementsByTagName("workingWidth").item(0).getTextContent());
 
-        workingWidth = Math.round(workingWidth*10.0)/10.0;
+        workingWidth = Math.round(workingWidth*10.0)/10.0; // TODO Padaryti, kad jei sveikas skaicius, nerodytu liekanos nulio
         return Optional.of(new WorkingWidthSpec(workingWidth));
     }
 }

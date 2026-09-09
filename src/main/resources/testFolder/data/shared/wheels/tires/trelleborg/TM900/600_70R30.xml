@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<wheel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../shared/xml/schema/wheel.xsd">
+    <metadata brand="TRELLEBORG" name="TM900" category="TRACTOR" />
+    <default>
+        <physics radius="0.8197" visualOffset="0.005" width="0.6" mass="0.267" tireType="mud" frictionScale="1.60" maxLongStiffness="10.5" maxLatStiffness="125" maxLatStiffnessLoad="2" />
+        <tire filename="$data/shared/wheels/tires/trelleborg/TM900/600_70R30.i3d" nodeLeft="0|0" nodeRight="0|0" maxDeformation="0.0822" tireTrackAtlasIndex="0" hasMudMesh="true" />
+        <outerRim filename="$data/shared/wheels/rims/rim001.i3d" node="1|0" widthAndDiam="18 30" />
+        <innerRim filename="$data/shared/wheels/rims/rim001.i3d" nodeLeft="3|0" nodeRight="3|1" widthAndDiam="18 30" />
+    </default>
+    <configurations>
+        <configuration id="dual">
+            <innerRim filename="-" />
+        </configuration>
+        <configuration id="jd">
+            <innerRim filename="$data/shared/wheels/rims/rim006.i3d" nodeLeft="0|0" nodeRight="0|1" />
+        </configuration>
+    </configurations>
+</wheel>
